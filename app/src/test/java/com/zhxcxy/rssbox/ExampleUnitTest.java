@@ -1,4 +1,4 @@
-package com.zhxcxy.rockrss;
+package com.zhxcxy.rssbox;
 
 import org.junit.Test;
 

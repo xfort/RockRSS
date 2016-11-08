@@ -1,4 +1,4 @@
-package com.zhxcxy.rockrss;
+package com.zhxcxy.rssbox;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
