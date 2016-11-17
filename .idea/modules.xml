@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/RockAndroid/RockAndroid.iml" filepath="$PROJECT_DIR$/RockAndroid/RockAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/RockRSS.iml" filepath="$PROJECT_DIR$/RockRSS.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xrss/xrss.iml" filepath="$PROJECT_DIR$/xrss/xrss.iml" />
     </modules>
   </component>
 </project>
