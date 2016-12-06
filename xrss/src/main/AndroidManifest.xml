@@ -23,9 +23,14 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.fort.xrss.main.MainActivity" />
+        <activity android:name=".main.MainActivity" />
 
-        <activity android:name=".web.WebActivity" />
+        <activity
+            android:name=".web.WebActivity"
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".rss.ArticleActivity"
+            android:launchMode="singleTop" />
     </application>
 
 </manifest>

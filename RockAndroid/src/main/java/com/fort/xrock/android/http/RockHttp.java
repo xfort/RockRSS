@@ -33,6 +33,7 @@ public class RockHttp {
         builder.writeTimeout(60, TimeUnit.SECONDS);
         builder.addInterceptor(new RockInterceptor());
         builder.addNetworkInterceptor(new RockNetworkInterceptor());
+        okHttpClient = builder.build();
     }
 
     public void setAppThreadPool(ExecutorService executorService) {
@@ -99,19 +100,27 @@ public class RockHttp {
     }
 
     private <T> void doRequestAsync(Request request, HttpCallback<T> callback) {
+        if (callback.weakHandler == null) {
+            callback.setHandler(handler);
+        }
         okHttpClient.newCall(request).enqueue(callback);
     }
 
 
     private <T> T doRequestSync(Request request, HttpResponseIn<T> parser) {
+        Response response = null;
         try {
             Call call = okHttpClient.newCall(request);
-            Response response = call.execute();
+            response = call.execute();
             if (!call.isCanceled()) {
                 return parser.parseResponse(response);
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            if (response != null) {
+                response.close();
+            }
         }
         return null;
     }

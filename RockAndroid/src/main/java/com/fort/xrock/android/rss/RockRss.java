@@ -10,9 +10,11 @@ public class RockRss {
     public String version;
     public String channelTitle, channelDes, channelLink;
     public String channelPubDate;
-    public List<RockRssItem> itemList;
+    public List<Article> itemList;
 
-    public void test(){
-//        Log.d("TAG","rockrss");
+    public void destroy() {
+        if (itemList != null) {
+            itemList.clear();
+        }
     }
 }

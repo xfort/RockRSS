@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/article_pic_iv"
+        android:layout_width="96dp"
+        android:layout_height="80dp" />
+
+    <TextView
+        android:id="@+id/article_title_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/item_title"
+        android:layout_toRightOf="@id/article_pic_iv"
+        android:lines="2" />
+
+    <TextView
+        android:id="@+id/article_sourcename_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/article_title_tv"
+        android:layout_alignParentBottom="true"
+        android:ems="8"
+        android:textSize="@dimen/item_des"
+        android:lines="1"
+        android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/article_pubdatetime_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/item_des"
+        android:layout_alignBaseline="@id/article_sourcename_tv"
+        android:layout_alignParentRight="true"
+        android:ems="10"
+        android:gravity="right"
+        android:lines="1"
+        android:singleLine="true" />
+
+</merge>

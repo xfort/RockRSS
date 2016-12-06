@@ -39,27 +39,29 @@ public class RockRssHandler {
             initParser(null);
         }
         try {
+            data = data.replaceAll("&", "&amp;");
+
             xmlParser.setInput(new StringReader(data));
 
-            int eventType;
+            int eventType = xmlParser.getEventType();
             String name = "", text = null;
-            do {
-                eventType = xmlParser.getEventType();
+
+            while (eventType != XmlPullParser.END_DOCUMENT) {
 
                 switch (eventType) {
                     case XmlPullParser.START_DOCUMENT:
                         break;
                     case XmlPullParser.START_TAG:
-                        name = xmlParser.getName();
+                        name = xmlParser.getName().trim();
                         if (name.equalsIgnoreCase("channel")) {
                             parseChannel(xmlParser, rss);
                         }
                         break;
                     case XmlPullParser.TEXT:
-                        text = xmlParser.getText();
+                        text = xmlParser.getText().trim();
                         break;
                     case XmlPullParser.END_TAG:
-                        name = xmlParser.getName();
+                        name = xmlParser.getName().trim();
                         text = null;
                         break;
                     default:
@@ -69,12 +71,10 @@ public class RockRssHandler {
                 }
                 eventType = xmlParser.next();
                 Log.d(TAG, "parseData_" + eventType + "_" + name + "_" + text);
-
-            } while (eventType != XmlPullParser.END_DOCUMENT);
+            }
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
-//        Log.d(TAG, new Gson().toJson(rss));
         return rss;
     }
 
@@ -95,7 +95,7 @@ public class RockRssHandler {
                     if (name.equalsIgnoreCase("item")) {
                         Log.d(TAG, "parseChannel()_" + name);
 
-                        RockRssItem rssItem = parseItem(parser, new RockRssItem());
+                        Article rssItem = parseItem(parser, new Article());
                         if (rssItem != null) {
                             rss.itemList.add(rssItem);
                         }
@@ -103,7 +103,7 @@ public class RockRssHandler {
                         setChannel(name, parser, rss);
                     }
                 } else if (eventType == XmlPullParser.END_TAG) {
-                    name = parser.getName();
+                    name = parser.getName().trim();
                     if (name.equalsIgnoreCase("channel")) {
                         break;
                     }
@@ -121,16 +121,16 @@ public class RockRssHandler {
         try {
             switch (name) {
                 case "title":
-                    rss.channelTitle = parser.nextText();
+                    rss.channelTitle = parser.nextText().trim();
                     break;
                 case "link":
-                    rss.channelLink = parser.nextText();
+                    rss.channelLink = parser.nextText().trim();
                     break;
                 case "description":
-                    rss.channelDes = parser.nextText();
+                    rss.channelDes = parser.nextText().trim();
                     break;
                 case "pubDate":
-                    rss.channelPubDate = parser.nextText();
+                    rss.channelPubDate = parser.nextText().trim();
                     break;
             }
         } catch (XmlPullParserException | IOException e) {
@@ -138,17 +138,17 @@ public class RockRssHandler {
         }
     }
 
-    public RockRssItem parseItem(XmlPullParser parser, RockRssItem item) {
+    public Article parseItem(XmlPullParser parser, Article item) {
         int eventType;
         String name = null;
         try {
             do {
                 eventType = parser.getEventType();
                 if (eventType == XmlPullParser.START_TAG) {
-                    name = parser.getName();
+                    name = parser.getName().trim();
                     setItem(name, parser, item);
                 } else if (eventType == XmlPullParser.END_TAG) {
-                    name = parser.getName();
+                    name = parser.getName().trim();
                     if (name.equalsIgnoreCase("item")) {
                         break;
                     }
@@ -162,31 +162,33 @@ public class RockRssHandler {
         return item;
     }
 
-    private void setItem(String name, XmlPullParser parser, RockRssItem item) {
+    private void setItem(String name, XmlPullParser parser, Article item) {
         try {
+            Log.d(TAG, name + "");
+
             switch (name) {
                 case "title":
-                    item.title = parser.nextText();
+                    item.title = parser.nextText().trim();
                     break;
                 case "link":
-                    item.link = parser.nextText();
+
+                    item.link = parser.nextText().trim();
                     break;
                 case "category":
-                    item.category = parser.nextText();
+                    item.category = parser.nextText().trim();
                     break;
                 case "description":
-                    item.des = parser.nextText();
+                    item.des = parser.nextText().trim();
                     break;
                 case "pubDate":
-                    item.pubDate = parser.nextText();
+                    item.pubDate = parser.nextText().trim();
                     break;
                 case "guid":
-                    item.guid = parser.nextText();
+                    item.guid = parser.nextText().trim();
                     break;
             }
         } catch (XmlPullParserException | IOException e) {
             e.printStackTrace();
         }
     }
-
 }

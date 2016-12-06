@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">XRss</string>
+    <string name="OSChina">开源中国</string>
+    <string name="BoLeZaiXian">伯乐在线</string>
+    <string name="CSDNGeek">CSDNGeek</string>
+    <string name="CXYTouTiao">程序员头条</string>
+    <string name="HuXiu">虎嗅</string>
+    <string name="ZOL">中关村在线</string>
+    <string name="QQ_HomeLastest">腾讯国内</string>
+    <string name="Sina_HomeLastest">新浪国内最新</string>
+    <string name="Sina_WorldLastest">新浪国际最新</string>
+    <string name="Baidu_HomeLastest">百度国内最新</string>
+    <string name="Baidu_HomeHot">百度国内热点</string>
+    <string name="Baidu_WorldLastest">百度国际最新</string>
+    <string name="Baidu_WorldHot">百度国际热点</string>
+
 </resources>

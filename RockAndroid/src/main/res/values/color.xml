@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="eye_green">#C7EDCC</color>
+    <color name="eye_green_dark">#8BF048</color>
+
+    <color name="white">#CEEDED</color>
+    <color name="black">#000000</color>
+    <color name="translucent">#888888</color>
+
+</resources>

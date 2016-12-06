@@ -39,16 +39,22 @@ public abstract class HttpCallback<T> implements HttpCallbackIn<T> {
 
     @Override
     public void onResponse(Call call, Response response) throws IOException {
-        if (!call.isCanceled()) {
-            T resData = onParse(response);
-            if (weakHandler != null) {
-                Handler handler = weakHandler.get();
-                if (handler != null) {
-                    Message msg = Message.obtain(handler, new HttpCallbackRun<T>(this, resData));
-                    msg.obj = call.request().tag();
-                    msg.sendToTarget();
-                    return;
+        try {
+            if (!call.isCanceled()) {
+                T resData = onParse(response);
+                if (weakHandler != null) {
+                    Handler handler = weakHandler.get();
+                    if (handler != null) {
+                        Message msg = Message.obtain(handler, new HttpCallbackRun<T>(this, resData));
+                        msg.obj = call.request().tag();
+                        msg.sendToTarget();
+                        return;
+                    }
                 }
+            }
+        } finally {
+            if (response != null) {
+                response.close();
             }
         }
         clearHandler();
@@ -60,15 +66,16 @@ public abstract class HttpCallback<T> implements HttpCallbackIn<T> {
         clearHandler();
     }
 
-    public void destroy() {
-        clearHandler();
-    }
 
     void clearHandler() {
         if (weakHandler != null) {
             weakHandler.clear();
             weakHandler = null;
         }
+    }
+
+    public void destroy() {
+        clearHandler();
     }
 
 }

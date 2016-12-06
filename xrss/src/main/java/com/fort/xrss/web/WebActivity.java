@@ -1,15 +1,14 @@
 package com.fort.xrss.web;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
-import android.os.Message;
-import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.util.Log;
+import android.support.v4.app.Fragment;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageView;
 
-import com.fort.xrock.android.view.RockWebView;
-import com.fort.xrock.android.weak.WeakHandler;
-import com.fort.xrss.AppApplication;
 import com.fort.xrss.R;
 import com.fort.xrss.base.BaseActivity;
 
@@ -17,27 +16,31 @@ import com.fort.xrss.base.BaseActivity;
  * Created by zhxcxy on 16-11-10.
  */
 
-public class WebActivity extends BaseActivity {
+public class WebActivity extends BaseActivity implements OnClickListener {
     final String TAG = "WebActivity";
-    WeakHandler<WebActivity> weakHandler;
-
-    RockWebView webView;
-
-//     Handler handler = new Handler();
+    Intent intent;
+    ImageView closeIV;
+    Runnable closeIVRun;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        intent = getIntent();
+        setContentView(R.layout.activity_webview);
+        setWebFragment();
+        findView();
+    }
 
-        setContentView(R.layout.view_rock_webview);
-        webView = (RockWebView) findViewById(R.id.rock_webview);
-        webView.loadUrl("http://www.163.com/");
-        testWeak();
+    void findView() {
+        closeIV = (ImageView) findViewById(R.id.act_webview_close_iv);
+        findViewById(R.id.act_webview_browopen_iv).setOnClickListener(this);
+        initCloseIV();
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        this.intent = intent;
     }
 
     @Override
@@ -63,44 +66,66 @@ public class WebActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        AppApplication.getRefwatcher(getApplicationContext()).watch(this);
-        if(weakHandler!=null){
-            weakHandler.removeCallbacksAndMessages(null);
+        if (closeIV != null) {
+            closeIV.clearAnimation();
+            closeIV.removeCallbacks(closeIVRun);
         }
     }
 
-    private void testWeak() {
-        weakHandler = new WeakHandler<WebActivity>() {
-            @Override
-            public void handleMessage(Message msg) {
-                super.handleMessage(msg);
-                Log.d(TAG, "WeakHandler_" + msg.what);
-//                show();
-                if (msg.what == 1) {
-                    getWeak().test();
+    @Override
+    public void onBackPressed() {
+        if (!onBackPressedFragmnet()) {
+            super.onBackPressed();
+        }
+    }
+
+    void setWebFragment() {
+        Bundle bd = intent.getExtras();
+        WebFragment webFragment = new WebFragment();
+        webFragment.setArguments(bd);
+        getSupportFragmentManager().beginTransaction().replace(R.id.act_webview_empty_framelayout, webFragment, "webfragment").commitAllowingStateLoss();
+    }
+
+    boolean onBackPressedFragmnet() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.act_webview_empty_framelayout);
+        if (fragment != null && fragment instanceof WebFragment) {
+            return ((WebFragment) fragment).onBackPressed();
+        }
+        return false;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.act_webview_close_iv:
+                if (v.isShown()) {
+                    finish();
                 }
+                break;
+            case R.id.act_webview_browopen_iv:
+                openBrow();
+                break;
+        }
+    }
+
+    void initCloseIV() {
+        closeIV.setOnClickListener(this);
+        closeIVRun = new Runnable() {
+            @Override
+            public void run() {
+                closeIV.setVisibility(View.VISIBLE);
             }
         };
-        weakHandler.setWeak(this);
-        for (int index = 0; index < 20; index++) {
-            Message msg = Message.obtain();
-            msg.what = (int) SystemClock.currentThreadTimeMillis();
-            weakHandler.sendMessageDelayed(msg, 1000 * 60 * 100);
+        closeIV.postDelayed(closeIVRun, 3000);
+    }
+
+    void openBrow() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.act_webview_empty_framelayout);
+        if (fragment != null && fragment instanceof WebFragment) {
+            String url = ((WebFragment) fragment).getCurrentUrl();
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
         }
-//        AppInstance.getAppInstance().setWV(webView);
-    }
-
-    private void show() {
-        webView.loadUrl("https://www.baidu.com/");
-    }
-
-    private void goWeb() {
-        Intent intent = new Intent(this, WebActivity.class);
-        startActivity(intent);
-//        runOnUiThread();
-    }
-
-    private void test() {
-        Log.d(TAG, "test");
     }
 }

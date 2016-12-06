@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="rss_oschina" type="id" />
+    <item name="view_article" type="id" />
+    <item name="load_direct" type="id" />
+    <item name="load_html_source" type="id" />
+
+</resources>
